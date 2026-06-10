@@ -21,8 +21,21 @@ THE SOFTWARE.
 */
 package main
 
-import "example.com/todo_tui/cmd"
+import (
+	"log"
+
+	"example.com/todo_tui/cmd"
+	"example.com/todo_tui/internal/sqlite"
+)
 
 func main() {
+	db, err := sqlite.Connect_db()
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = sqlite.Migrate(db)
+	if err != nil {
+		log.Fatal(err)
+	}
 	cmd.Execute()
 }
