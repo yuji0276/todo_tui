@@ -1,11 +1,19 @@
-create table if not exists  tasks
-(id text not null,
-  title text not null,
-  description text not null,
-  done integer check(done in (0 , 1)),
-  priority integer check(priority in (0 , 1 , 2 , 3)),
-  due_date text,
-  created_at text,
-  updated_at text
-  primary key  (id)
+CREATE TABLE if NOT EXISTS tasks(
+  id TEXT NOT NULL,
+  title TEXT NOT NULL,
+  description TEXT NOT NULL,
+  done INTEGER CHECK(done IN(
+    0,
+    1
+  )),
+  priority INTEGER CHECK(priority IN(
+    0,
+    1,
+    2,
+    3
+  )),
+  due_date TEXT,
+  created_at TEXT,
+  updated_at TEXT,
+  PRIMARY KEY(id)
 );
