@@ -7,4 +7,5 @@ create table if not exists  tasks
   due_date text,
   created_at text,
   updated_at text
+  primary key  (id)
 );
