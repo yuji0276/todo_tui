@@ -182,7 +182,7 @@ cmd層
 | CLI              | [cobra](https://github.com/spf13/cobra)                     |
 | TUI              | [Bubble Tea](https://github.com/charmbracelet/bubbletea)    |
 | DB               | [modernc.org/sqlite](https://pkg.go.dev/modernc.org/sqlite) |
-| マイグレーション | [golang-migrate](https://github.com/golang-migrate/migrate) |
+| マイグレーション | 手動管理 → [goose](https://github.com/pressly/goose) → [golang-migrate](https://github.com/golang-migrate/migrate) |
 | GCal             | Google Calendar API v3                                      |
 
 ---
@@ -192,7 +192,7 @@ cmd層
 | フェーズ | 内容                                        |
 | -------- | ------------------------------------------- |
 | 1        | `domain/` 型定義・`repository/interface.go` |
-| 2        | SQLite接続・マイグレーション実装            |
+| 2        | SQLite接続・マイグレーション実装（当面は手動管理、後にgoose → golang-migrateへ移行） |
 | 3        | `TaskRepository` SQLite実装                 |
 | 4        | `service/task.go` でCRUD疎通                |
 | 5        | `cmd/add`, `cmd/list` でCLI動作確認         |
