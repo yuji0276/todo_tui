@@ -177,27 +177,27 @@ cmd層
 
 ## 技術スタック
 
-| 用途             | ライブラリ                                                  |
-| ---------------- | ----------------------------------------------------------- |
-| CLI              | [cobra](https://github.com/spf13/cobra)                     |
-| TUI              | [Bubble Tea](https://github.com/charmbracelet/bubbletea)    |
-| DB               | [modernc.org/sqlite](https://pkg.go.dev/modernc.org/sqlite) |
+| 用途             | ライブラリ                                                                                                         |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------ |
+| CLI              | [cobra](https://github.com/spf13/cobra)                                                                            |
+| TUI              | [Bubble Tea](https://github.com/charmbracelet/bubbletea)                                                           |
+| DB               | [modernc.org/sqlite](https://pkg.go.dev/modernc.org/sqlite)                                                        |
 | マイグレーション | 手動管理 → [goose](https://github.com/pressly/goose) → [golang-migrate](https://github.com/golang-migrate/migrate) |
-| GCal             | Google Calendar API v3                                      |
+| GCal             | Google Calendar API v3                                                                                             |
 
 ---
 
 ## 開発ロードマップ
 
-| フェーズ | 内容                                        |
-| -------- | ------------------------------------------- |
-| 1        | `domain/` 型定義・`repository/interface.go` |
+| フェーズ | 内容                                                                                 |
+| -------- | ------------------------------------------------------------------------------------ |
+| 1        | `domain/` 型定義・`repository/interface.go`                                          |
 | 2        | SQLite接続・マイグレーション実装（当面は手動管理、後にgoose → golang-migrateへ移行） |
-| 3        | `TaskRepository` SQLite実装                 |
-| 4        | `service/task.go` でCRUD疎通                |
-| 5        | `cmd/add`, `cmd/list` でCLI動作確認         |
-| 6        | Bubble Tea TUI実装                          |
-| 7        | GCal連携・Syncer実装                        |
+| 3        | `TaskRepository` SQLite実装                                                          |
+| 4        | `service/task.go` でCRUD疎通                                                         |
+| 5        | `cmd/add`, `cmd/list` でCLI動作確認                                                  |
+| 6        | Bubble Tea TUI実装                                                                   |
+| 7        | GCal連携・Syncer実装                                                                 |
 
 ---
 
