@@ -11,5 +11,5 @@ type TaskRepository interface {
 	GetByID(ctx context.Context, id string) (domain.Task, error)
 	Create(ctx context.Context, newTask domain.Task) (domain.Task, error)
 	Update(ctx context.Context, targetTask domain.Task) (domain.Task, error)
-	Delete(ctx context.Context) error
+	Delete(ctx context.Context, id string) error
 }
