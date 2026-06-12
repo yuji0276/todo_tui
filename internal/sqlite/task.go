@@ -17,7 +17,7 @@ func NewTaskRepository(db *sql.DB) repository.TaskRepository {
 }
 
 func (r *sqliteTaskRepository) List(ctx context.Context) ([]domain.Task, error) {
-	rows, err := r.db.Query("SELECT id, title, description, due_date, priority, is_completed, created_at, updated_at FROM Tasks")
+	rows, err := r.db.Query("SELECT id, title, description, due_date, priority, done, created_at, updated_at FROM Tasks")
 	if err != nil {
 		return nil, err
 	}
@@ -27,7 +27,7 @@ func (r *sqliteTaskRepository) List(ctx context.Context) ([]domain.Task, error) 
 
 	for rows.Next() {
 		var task domain.Task
-		if err := rows.Scan(&task.ID, &task.Title, &task.Description, &task.DueDate, &task.Priority, &task.IsCompleted, &task.CreatedAt, &task.UpdatedAt); err != nil {
+		if err := rows.Scan(&task.ID, &task.Title, &task.Description, &task.DueDate, &task.Priority, &task.Done, &task.CreatedAt, &task.UpdatedAt); err != nil {
 			return nil, err
 		}
 		tasks = append(tasks, task)
