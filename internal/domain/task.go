@@ -8,7 +8,7 @@ type Task struct {
 	Description string
 	DueDate     *time.Time
 	Priority    Priority
-	done        bool
+	Done        bool
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }

@@ -3,6 +3,8 @@ package sqlite
 import (
 	"context"
 	"database/sql"
+	"fmt"
+	"time"
 
 	"example.com/todo_tui/internal/domain"
 	"example.com/todo_tui/internal/repository"
@@ -17,7 +19,7 @@ func NewTaskRepository(db *sql.DB) repository.TaskRepository {
 }
 
 func (r *sqliteTaskRepository) List(ctx context.Context) ([]domain.Task, error) {
-	rows, err := r.db.Query("SELECT id, title, description, due_date, priority, is_completed, created_at, updated_at FROM Tasks")
+	rows, err := r.db.Query("SELECT id, title, description, due_date, priority, done, created_at, updated_at FROM Tasks")
 	if err != nil {
 		return nil, err
 	}
@@ -27,7 +29,7 @@ func (r *sqliteTaskRepository) List(ctx context.Context) ([]domain.Task, error) 
 
 	for rows.Next() {
 		var task domain.Task
-		if err := rows.Scan(&task.ID, &task.Title, &task.Description, &task.DueDate, &task.Priority, &task.IsCompleted, &task.CreatedAt, &task.UpdatedAt); err != nil {
+		if err := rows.Scan(&task.ID, &task.Title, &task.Description, &task.DueDate, &task.Priority, &task.Done, &task.CreatedAt, &task.UpdatedAt); err != nil {
 			return nil, err
 		}
 		tasks = append(tasks, task)
@@ -43,7 +45,26 @@ func (r *sqliteTaskRepository) GetByID(ctx context.Context, id string) (domain.T
 }
 
 func (r *sqliteTaskRepository) Create(ctx context.Context, newTask domain.Task) (domain.Task, error) {
-	panic("not implemented")
+	currentTime := time.Now()
+	result, err := r.db.Exec("insert into Tasks (title, description, done, priority, due_date, created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?)", newTask.Title, newTask.Description, false, newTask.Priority, newTask.DueDate, currentTime, currentTime)
+	if err != nil {
+		return domain.Task{}, err
+	}
+	createdTaskId, err := result.LastInsertId()
+	if err != nil {
+		return domain.Task{}, err
+	}
+	var createdTask domain.Task
+
+	createdTask.ID = fmt.Sprintf("%d", createdTaskId)
+	createdTask.Title = newTask.Title
+	createdTask.Description = newTask.Description
+	createdTask.DueDate = newTask.DueDate
+	createdTask.Priority = newTask.Priority
+	createdTask.Done = newTask.Done
+	createdTask.CreatedAt = currentTime
+	createdTask.UpdatedAt = currentTime
+	return createdTask, nil
 }
 
 func (r *sqliteTaskRepository) Update(ctx context.Context, targetTask domain.Task) (domain.Task, error) {
