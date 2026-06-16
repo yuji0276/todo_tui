@@ -35,7 +35,12 @@ to quickly create a Cobra application.`,
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println(tasks)
+
+		for _, task := range tasks {
+			if task.Done == false {
+				fmt.Println(task.Title)
+			}
+		}
 	},
 }
 
