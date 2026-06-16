@@ -1,5 +1,5 @@
 CREATE TABLE if NOT EXISTS tasks(
-  id TEXT NOT NULL,
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
   title TEXT NOT NULL,
   description TEXT,
   done INTEGER CHECK(done IN(0,
@@ -10,6 +10,5 @@ CREATE TABLE if NOT EXISTS tasks(
   3)),
   due_date TEXT,
   created_at TEXT,
-  updated_at TEXT,
-  PRIMARY KEY(id)
+  updated_at TEXT
 );

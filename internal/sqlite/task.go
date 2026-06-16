@@ -3,7 +3,6 @@ package sqlite
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"time"
 
 	"example.com/todo_tui/internal/domain"
@@ -46,17 +45,12 @@ func (r *sqliteTaskRepository) GetByID(ctx context.Context, id string) (domain.T
 
 func (r *sqliteTaskRepository) Create(ctx context.Context, newTask domain.Task) (domain.Task, error) {
 	currentTime := time.Now()
-	result, err := r.db.Exec("insert into Tasks (title, description, done, priority, due_date, created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?)", newTask.Title, newTask.Description, false, newTask.Priority, newTask.DueDate, currentTime, currentTime)
-	if err != nil {
-		return domain.Task{}, err
-	}
-	createdTaskId, err := result.LastInsertId()
+	_, err := r.db.Exec("insert into Tasks (title, description, done, priority, due_date, created_at, updated_at) values (?, ?,?,  ?, ?, ?, ?)", newTask.Title, newTask.Description, false, newTask.Priority, newTask.DueDate, currentTime, currentTime)
 	if err != nil {
 		return domain.Task{}, err
 	}
 	var createdTask domain.Task
 
-	createdTask.ID = fmt.Sprintf("%d", createdTaskId)
 	createdTask.Title = newTask.Title
 	createdTask.Description = newTask.Description
 	createdTask.DueDate = newTask.DueDate

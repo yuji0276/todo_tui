@@ -5,7 +5,6 @@ import (
 
 	"example.com/todo_tui/internal/domain"
 	"example.com/todo_tui/internal/repository"
-	"github.com/google/uuid"
 )
 
 type TaskService struct {
@@ -25,8 +24,8 @@ func (s *TaskService) GetAllTasks(ctx context.Context) ([]domain.Task, error) {
 }
 
 func (s *TaskService) CreateTask(ctx context.Context, newTask domain.Task) (domain.Task, error) {
-	newTask.ID = uuid.New().String()
 	task, err := s.repo.Create(ctx, newTask)
+	newTask.Done = false
 	if err != nil {
 		return domain.Task{}, err
 	}
