@@ -3,6 +3,7 @@ package sqlite
 import (
 	"context"
 	"database/sql"
+	"time"
 
 	"example.com/todo_tui/internal/domain"
 	"example.com/todo_tui/internal/repository"
@@ -43,7 +44,21 @@ func (r *sqliteTaskRepository) GetByID(ctx context.Context, id string) (domain.T
 }
 
 func (r *sqliteTaskRepository) Create(ctx context.Context, newTask domain.Task) (domain.Task, error) {
-	panic("not implemented")
+	currentTime := time.Now()
+	_, err := r.db.Exec("insert into Tasks (title, description, done, priority, due_date, created_at, updated_at) values (?, ?,?,  ?, ?, ?, ?)", newTask.Title, newTask.Description, false, newTask.Priority, newTask.DueDate, currentTime, currentTime)
+	if err != nil {
+		return domain.Task{}, err
+	}
+	var createdTask domain.Task
+
+	createdTask.Title = newTask.Title
+	createdTask.Description = newTask.Description
+	createdTask.DueDate = newTask.DueDate
+	createdTask.Priority = newTask.Priority
+	createdTask.Done = newTask.Done
+	createdTask.CreatedAt = currentTime
+	createdTask.UpdatedAt = currentTime
+	return createdTask, nil
 }
 
 func (r *sqliteTaskRepository) Update(ctx context.Context, targetTask domain.Task) (domain.Task, error) {

@@ -4,8 +4,14 @@ Copyright © 2026 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"context"
 	"fmt"
+	"log"
+	"time"
 
+	"example.com/todo_tui/internal/domain"
+	"example.com/todo_tui/internal/service"
+	"example.com/todo_tui/internal/sqlite"
 	"github.com/spf13/cobra"
 )
 
@@ -15,12 +21,53 @@ var addCmd = &cobra.Command{
 	Short: "Add new task",
 	Long:  "This command add new task.ex)add wash_dishes ",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("add called")
+
+		db, err := sqlite.Connect_db()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		var newTask domain.Task
+
+		newTask.Title = args[0]
+
+		newTask.Description = description
+		if dueDate != "" {
+			due, err := time.Parse("2006-01-02", dueDate)
+			if err != nil {
+				log.Fatal(err)
+			}
+			newTask.DueDate = &due
+		}
+
+		var persedPriority domain.Priority
+		persedPriority = domain.Priority(priority)
+		newTask.Priority = persedPriority
+
+		repo := sqlite.NewTaskRepository(db)
+		s := service.NewTaskService(repo)
+		ctx := context.Background()
+		fmt.Println(newTask)
+		createdTask, err := s.CreateTask(ctx, newTask)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(createdTask)
 	},
 }
 
+var description string
+var dueDate string
+var priority int
+
 func init() {
 	rootCmd.AddCommand(addCmd)
+
+	addCmd.Flags().StringVar(&description, "desc", "", "task description")
+
+	addCmd.Flags().StringVar(&dueDate, "due", "", "task expire")
+
+	addCmd.Flags().IntVar(&priority, "pri", 0, "task priority")
 
 	// Here you will define your flags and configuration settings.
 
