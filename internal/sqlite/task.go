@@ -28,9 +28,24 @@ func (r *sqliteTaskRepository) List(ctx context.Context) ([]domain.Task, error) 
 
 	for rows.Next() {
 		var task domain.Task
-		if err := rows.Scan(&task.ID, &task.Title, &task.Description, &task.DueDate, &task.Priority, &task.Done, &task.CreatedAt, &task.UpdatedAt); err != nil {
+		var createdAtStr string
+		var updatedAtStr string
+		if err := rows.Scan(&task.ID, &task.Title, &task.Description, &task.DueDate, &task.Priority, &task.Done, &createdAtStr, &updatedAtStr); err != nil {
 			return nil, err
 		}
+
+		createdAt, err := time.Parse("2006-01-02 15:04:05", createdAtStr)
+		if err != nil {
+			return nil, err
+		}
+		task.CreatedAt = createdAt
+
+		updatedAt, err := time.Parse("2006-01-02 15:04:05", updatedAtStr)
+		if err != nil {
+			return nil, err
+		}
+		task.UpdatedAt = updatedAt
+
 		tasks = append(tasks, task)
 	}
 	if err = rows.Err(); err != nil {
@@ -45,7 +60,8 @@ func (r *sqliteTaskRepository) GetByID(ctx context.Context, id string) (domain.T
 
 func (r *sqliteTaskRepository) Create(ctx context.Context, newTask domain.Task) (domain.Task, error) {
 	currentTime := time.Now()
-	_, err := r.db.Exec("insert into Tasks (title, description, done, priority, due_date, created_at, updated_at) values (?, ?,?,  ?, ?, ?, ?)", newTask.Title, newTask.Description, false, newTask.Priority, newTask.DueDate, currentTime, currentTime)
+	formatedCurrnetTime := currentTime.Format("2006-01-02 15:04:05")
+	_, err := r.db.Exec("insert into Tasks (title, description, done, priority, due_date, created_at, updated_at) values (?, ?,?,  ?, ?, ?, ?)", newTask.Title, newTask.Description, false, newTask.Priority, newTask.DueDate, formatedCurrnetTime, formatedCurrnetTime)
 	if err != nil {
 		return domain.Task{}, err
 	}
